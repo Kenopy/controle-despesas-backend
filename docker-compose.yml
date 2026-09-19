@@ -1,13 +1,11 @@
-version: '3.8'
-
 services:
   db-despesas:
     image: postgres:15-alpine
     container_name: db-despesas
     environment:
-      POSTGRES_USER: DB_USER
-      POSTGRES_PASSWORD: DB_PASS
-      POSTGRES_DB: DB_NAME
+      POSTGRES_USER: ${DB_USER}
+      POSTGRES_PASSWORD: ${DB_PASS}
+      POSTGRES_DB: ${DB_NAME}
     ports:
       - "5432:5432"
     restart: unless-stopped

@@ -3,6 +3,7 @@ package com.financas.despesas.services;
 import com.financas.despesas.dtos.DespesaRequestDTO;
 import com.financas.despesas.dtos.DespesaResponseDTO;
 import com.financas.despesas.models.Despesa;
+import com.financas.despesas.models.enums.FormaPagamento;
 import com.financas.despesas.repositories.DespesaRepository;
 import org.springframework.stereotype.Service;
 
@@ -19,7 +20,6 @@ public class DespesaService {
         this.repository = repository;
     }
 
-    // 1. CRIAR
     public DespesaResponseDTO criar(DespesaRequestDTO dto) {
         Despesa novaDespesa = new Despesa();
         novaDespesa.setDescricao(dto.descricao());
@@ -28,18 +28,26 @@ public class DespesaService {
         novaDespesa.setFormaPagamento(dto.formaPagamento());
         novaDespesa.setDataDespesa(dto.dataDespesa());
 
+        // Futuramente, quando o front tiver pronto, pensar se envia do front o 1 por padrao ou se envia null e definimos aqui, para metodos diferentes de Cartao_Credito
+        // Fazer tbm para o metodo atualizar
+        if (dto.formaPagamento() == FormaPagamento.CARTAO_CREDITO)
+        {
+            int qtdParcelas = (dto.parcelas() != null && dto.parcelas() > 0) ? dto.parcelas() : 1;
+            novaDespesa.setParcelas(qtdParcelas);
+        } else {
+            novaDespesa.setParcelas(1);
+        }
+
         Despesa salva = repository.save(novaDespesa);
         return new DespesaResponseDTO(salva);
     }
 
-    // 2. LISTAR TODAS
     public List<DespesaResponseDTO> listarTodas() {
         return repository.findAll().stream()
                 .map(DespesaResponseDTO::new) // Usa aquele construtor prático que fizemos no DTO!
                 .toList();
     }
 
-    // 3. BUSCAR POR ID
     public DespesaResponseDTO buscarPorId(UUID id) {
         Despesa despesa = repository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Despesa não encontrada com o ID: " + id));
@@ -47,13 +55,10 @@ public class DespesaService {
         return new DespesaResponseDTO(despesa);
     }
 
-    // 4. ATUALIZAR
     public DespesaResponseDTO atualizar(UUID id, DespesaRequestDTO dto) {
-        // Primeiro, verificamos se a despesa existe
         Despesa despesaExistente = repository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Despesa não encontrada com o ID: " + id));
 
-        // Atualizamos os dados
         despesaExistente.setDescricao(dto.descricao());
         despesaExistente.setValor(dto.valor());
         despesaExistente.setCategoria(dto.categoria());
@@ -64,7 +69,6 @@ public class DespesaService {
         return new DespesaResponseDTO(atualizada);
     }
 
-    // 5. DELETAR
     public void deletar(UUID id) {
         Despesa despesa = repository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Despesa não encontrada com o ID: " + id));

@@ -10,6 +10,7 @@ public record DespesaRequestDTO(
         BigDecimal valor,
         Categoria categoria,
         FormaPagamento formaPagamento,
-        LocalDate dataDespesa
+        LocalDate dataDespesa,
+        Integer parcelas
 ) {
 }

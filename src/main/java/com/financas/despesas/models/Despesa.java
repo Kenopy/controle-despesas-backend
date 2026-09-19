@@ -37,13 +37,16 @@ public class Despesa {
     @Column(nullable = false)
     private FormaPagamento formaPagamento;
 
+    @Column(nullable = false)
+    private Integer parcelas;
+
     @Column(name = "data_despesa", nullable = false)
     private LocalDate dataDespesa;
 
     @Column(name = "data_registro", updatable = false)
     private LocalDateTime dataRegistro;
 
-    // Esse método é executado automaticamente antes de salvar no banco
+    // Metodo executado antes de salvar no banco
     @PrePersist
     public void prePersist() {
         this.dataRegistro = LocalDateTime.now();

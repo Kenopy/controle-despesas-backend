@@ -8,5 +8,6 @@ public enum Categoria {
     TRANSPORTE,
     EDUCACAO,
     GAMES,
+    CARRO,
     OUTROS
 }

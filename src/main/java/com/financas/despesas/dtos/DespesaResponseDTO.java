@@ -16,9 +16,9 @@ public record DespesaResponseDTO(
         Categoria categoria,
         FormaPagamento formaPagamento,
         LocalDate dataDespesa,
-        LocalDateTime dataRegistro
+        LocalDateTime dataRegistro,
+        Integer parcelas
 ) {
-    // Construtor prático para converter a Entidade do banco em um DTO de resposta
     public DespesaResponseDTO(Despesa despesa) {
         this(
                 despesa.getId(),
@@ -27,7 +27,8 @@ public record DespesaResponseDTO(
                 despesa.getCategoria(),
                 despesa.getFormaPagamento(),
                 despesa.getDataDespesa(),
-                despesa.getDataRegistro()
+                despesa.getDataRegistro(),
+                despesa.getParcelas()
         );
     }
 }
